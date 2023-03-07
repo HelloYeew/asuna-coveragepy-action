@@ -9,7 +9,7 @@ inputs:
 
   ASUNA_ENDPOINT:
     description: "Asuna endpoint"
-    required: true
+    required: false
     default: https://asuna.helloyeew.dev/api/coverage/upload
 
   COVERAGEPY_COMMAND:
