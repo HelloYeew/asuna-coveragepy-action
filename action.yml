@@ -44,6 +44,7 @@ runs:
       run: |
         coverage html
         coverage report --format markdown > coverage.md
+        coverage json
 
     - name: Download upload script
       shell: bash
