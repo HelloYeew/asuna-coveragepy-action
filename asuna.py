@@ -56,12 +56,12 @@ if server.status_code != 201:
 else:
     output = json.loads(output)
     print(f'✅Success')
-    print(f'📝Project: {output["project_name"]}')
+    print(f'📝Project: {output["project"]}')
     print(f'📝Project URL: {output["project_url"]}')
     print(f'🔗Full report URL: {output["url"]}')
 
     # Write markdown file
     with open('asuna.md', 'w') as f:
-        f.write(f'📝Project: {output["project_name"]}')
+        f.write(f'📝Project: {output["project"]}')
         f.write(f'📝Project URL: {output["project_url"]}')
         f.write(f'🔗Full report URL: {output["url"]}')
