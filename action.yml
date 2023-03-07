@@ -22,7 +22,10 @@ runs:
   steps:
     - name: Install requirements
       shell: bash
-      run: pip install -r requirements.txt
+      run: |
+        pip install python-magic
+        pip install coverage
+        pip install requests
 
     - name: Install libmagic1
       shell: bash
@@ -41,6 +44,11 @@ runs:
       run: |
         coverage html
         coverage report --format markdown > coverage.md
+
+    - name: Download upload script
+      shell: bash
+      run: |
+          curl -L https://raw.githubusercontent.com/HelloYeew/asuna-coveragepy-action/main/asuna.py -o asuna.py
 
     - name: Upload coverage.py results to Asuna
       env:
