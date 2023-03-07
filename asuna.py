@@ -49,8 +49,8 @@ for root, dirs, files in os.walk('htmlcov'):
 # Send the request
 server = requests.post(url, data=form_data, files=all_files)
 output = server.text
-# if status is not 200, print error message
-if server.status_code != 200:
+# if status is not 201, print error message
+if server.status_code != 201:
     print(f'❌Failed: {server.text}')
     exit(1)
 else:
