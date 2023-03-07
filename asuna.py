@@ -33,7 +33,8 @@ form_data = {
     'key': os.getenv('ASUNA_UPLOAD_KEY'),
     'name': 'test',
     'description': 'a test',
-    'percentage': coverage['totals']['percent_covered'],
+    # it's float in coverage.json
+    'percentage': float(coverage['totals']['percent_covered']),
     'coverage': coverage
 }
 
