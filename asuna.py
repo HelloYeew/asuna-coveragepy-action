@@ -26,6 +26,7 @@ print('📈Preparing coverage report...')
 # open coverage.json file, read and store as a dict
 with open('coverage.json', 'r') as f:
     coverage = f.read()
+coverage = json.loads(coverage)
 
 url = os.getenv('ASUNA_ENDPOINT')
 print(f'⬆️Start uploading report to {url}')
@@ -34,7 +35,7 @@ form_data = {
     'name': 'test',
     'description': 'a test',
     # it's float in coverage.json
-    'percentage': float(coverage['totals']['percent_covered']),
+    'percentage': coverage['totals']['percent_covered'],
     'coverage': coverage
 }
 
