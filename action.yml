@@ -1,0 +1,82 @@
+name: 'Asuna Coverage.py Action'
+author: 'HelloYeew'
+description: 'Run coverage.py on your Python project and upload the results to Asuna.'
+inputs:
+  ASUNA_UPLOAD_KEY:
+    description: "Asuna project's upload key"
+    required: true
+    default: ASUNA_UPLOAD_KEY
+
+  ASUNA_ENDPOINT:
+    description: "Asuna endpoint"
+    required: true
+    default: https://asuna.helloyeew.dev/api/coverage/upload
+
+  COVERAGEPY_COMMAND:
+    description: "Command to run coverage.py"
+    required: true
+    default: coverage run -m pytest
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Install requirements
+      shell: bash
+      run: pip install -r requirements.txt
+
+    - name: Install libmagic1
+      shell: bash
+      run: |
+          sudo apt-get update
+          sudo apt-get install libmagic1
+
+    - name: Run coverage.py
+      env:
+        COVERAGEPY_COMMAND: ${{ inputs.COVERAGEPY_COMMAND }}
+      shell: bash
+      run: ${{ inputs.COVERAGEPY_COMMAND }}
+
+    - name: Export coverage.py results
+      shell: bash
+      run: |
+        coverage html
+        coverage report --format markdown > coverage.md
+
+    - name: Upload coverage.py results to Asuna
+      env:
+          ASUNA_UPLOAD_KEY: ${{ inputs.ASUNA_UPLOAD_KEY }}
+          ASUNA_ENDPOINT: ${{ inputs.ASUNA_ENDPOINT }}
+          # Get event name that is this pull request or push
+          EVENT_NAME: ${{ github.event_name }}
+          PULL_REQUEST_NUMBER: ${{ github.event.number }}
+          PULL_REQUEST_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PULL_REQUEST_HEAD: ${{ github.event.pull_request.head.sha }}
+          PULL_REQUEST_TITLE: ${{ github.event.pull_request.title }}
+          PUSH_BRANCH: ${{ github.ref }}
+          PUSH_COMMIT: ${{ github.sha }}
+      shell: bash
+      run: |
+        python asuna.py
+
+    - name: Store coverage.md and asuna.md in environment variables
+      shell: bash
+      run: |
+        echo "::set-env name=COVERAGE_MD::$(cat coverage.md)"
+        echo "::set-env name=ASUNA_MD::$(cat asuna.md)"
+
+    - name: Comment on pull request or update old comment
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: peter-evans/create-or-update-comment@v1
+      with:
+        issue-number: ${{ github.event.number }}
+        body: |
+            ## 🗡️Coverage Report
+            ${{ env.ASUNA_MD }}
+            ${{ env.COVERAGE_MD }}
+            ---------------------------------------
+            Report by [Asuna](https://asuna.helloyeew.dev)
+        reactions: rocket
+
+branding:
+  icon: 'check-square'
+  color: 'red'
