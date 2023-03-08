@@ -63,5 +63,5 @@ else:
     # Write markdown file
     with open('asuna.md', 'w') as f:
         f.writelines(f'📝Project: {output["project"]}')
-        f.writelines(f'📝Project URL: {output["project_url"]}\n')
-        f.writelines(f'🔗Full report URL: {output["url"]}\n')
+        f.writelines(f'📝Project URL: {output["project_url"]}')
+        f.writelines(f'🔗Full report URL: {output["url"]}')
