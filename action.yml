@@ -67,12 +67,18 @@ runs:
       run: |
         python asuna.py
 
-    - name: Store coverage.md and asuna.md in environment file
+    - name: Store coverage.md as result
+      id: coverage_md
+      env:
+          ACTION_ALLOW_UNSECURE_COMMANDS: true
       shell: bash
       run: |
-        echo "ASUNA_MD<<EOF" >> $GITHUB_ENV
-        echo $(cat asuna.md) >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
+          coverage_md=$(cat coverage.md)
+          coverage_md="${coverage_md//'%'/'%25'}"
+          coverage_md="${coverage_md//$'\n'/'%0A'}"
+          coverage_md="${coverage_md//$'\r'/'%0D'}"
+          echo $coverage_md
+          echo "::set-output name=coverage_md::$coverage_md"
 
     - name: Run coverage report --format and store result
       id: coverage
@@ -95,7 +101,7 @@ runs:
         body: |
           ## 🧪️Coverage Report
 
-          ${{ env.ASUNA_MD }}
+          ${{ steps.coverage_md.outputs.coverage_md }}
 
           ${{ steps.coverage.outputs.coverage }}
 
