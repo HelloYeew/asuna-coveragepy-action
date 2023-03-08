@@ -67,11 +67,11 @@ runs:
       run: |
         python asuna.py
 
-    - name: Store coverage.md and asuna.md in environment variables
+    - name: Store coverage.md and asuna.md in environment file
       shell: bash
       run: |
-        echo "::set-env name=COVERAGE_MD::$(cat coverage.md)"
-        echo "::set-env name=ASUNA_MD::$(cat asuna.md)"
+        echo "ASUNA_MD=$(cat asuna.md)" >> $GITHUB_ENV
+        echo "COVERAGE_MD=$(cat coverage.md)" >> $GITHUB_ENV
 
     - name: Comment on pull request or update old comment
       if: ${{ github.event_name == 'pull_request' }}
