@@ -77,26 +77,20 @@ runs:
         echo $(cat coverage.md) >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
 
-    - name: Download comment template
-      shell: bash
-      run: |
-          curl -L https://raw.githubusercontent.com/HelloYeew/asuna-coveragepy-action/main/comment-template.md -o comment-template.md
-
-    - name: Render comment template
-      id: template
-      uses: chuhlomin/render-template@v1.4
-      with:
-        template: comment-template.md
-        vars: |
-            asuna_report: ${{ env.ASUNA_MD }}
-            coverage_report: ${{ env.COVERAGE_MD }}
-
     - name: Comment on pull request or update old comment
       if: ${{ github.event_name == 'pull_request' }}
       uses: peter-evans/create-or-update-comment@v2
       with:
         issue-number: ${{ github.event.number }}
-        body: ${{ steps.template.outputs.result }}
+        body: |
+          ## 🧪️Coverage Report
+
+          ${{ env.ASUNA_MD }}
+
+          ${{ env.COVERAGE_MD }}
+
+          ---------------------------------------
+          <sub><sup>🗡️ Generate report by [Asuna](https://asuna.helloyeew.dev)</sup></sub>
         reactions: rocket
 
 branding:
