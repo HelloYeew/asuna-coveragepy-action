@@ -71,7 +71,7 @@ runs:
       shell: bash
       run: |
         echo "ASUNA_MD<<EOF" >> $GITHUB_ENV
-        echo $(cat asuna.md) >> $GITHUB_ENV
+        echo $(cat asuna.md | sed -e '$a\\') >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
         echo "COVERAGE_MD<<EOF" >> $GITHUB_ENV
         echo $(cat coverage.md) >> $GITHUB_ENV
