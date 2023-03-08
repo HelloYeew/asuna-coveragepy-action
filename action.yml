@@ -80,7 +80,12 @@ runs:
         ACTION_ALLOW_UNSECURE_COMMANDS: true
       shell: bash
       run: |
-          echo "::set-output name=coverage::$(cat coverage.md)"
+          coverage_report=$(coverage report --format markdown)
+          coverage_report="${coverage_report//'%'/'%25'}"
+          coverage_report="${coverage_report//$'\n'/'%0A'}"
+          coverage_report="${coverage_report//$'\r'/'%0D'}"
+          echo $coverage_report
+          echo "::set-output name=coverage::$coverage_report"
 
     - name: Comment on pull request or update old comment
       if: ${{ github.event_name == 'pull_request' }}
