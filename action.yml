@@ -74,13 +74,13 @@ runs:
         echo $(cat asuna.md) >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
 
-    - name: Run coverage report --format markdown and store in environment file
+    - name: Run coverage report --format and store result
+      id: coverage
+      env:
+        ACTION_ALLOW_UNSECURE_COMMANDS: true
       shell: bash
       run: |
-        echo "COVERAGE_MD<<EOF" >> $GITHUB_ENV
-        # replace space at the end of line with \s
-        echo $(coverage report --format markdown | sed 's/ $/\\s/') >> $GITHUB_ENV
-        echo "EOF" >> $GITHUB_ENV
+          echo "::set-output name=coverage::$(cat coverage.md)"
 
     - name: Comment on pull request or update old comment
       if: ${{ github.event_name == 'pull_request' }}
@@ -92,7 +92,7 @@ runs:
 
           ${{ env.ASUNA_MD }}
 
-          ${{ env.COVERAGE_MD }}
+          ${{ steps.coverage.outputs.coverage }}
 
           ---------------------------------------
           🗡️ Generate report by [Asuna](https://asuna.helloyeew.dev)
