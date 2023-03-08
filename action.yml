@@ -67,18 +67,18 @@ runs:
       run: |
         python asuna.py
 
-    - name: Store coverage.md as result
-      id: coverage_md
+    - name: Store asuna.md as result
+      id: asuna
       env:
           ACTION_ALLOW_UNSECURE_COMMANDS: true
       shell: bash
       run: |
-          coverage_md=$(cat coverage.md)
-          coverage_md="${coverage_md//'%'/'%25'}"
-          coverage_md="${coverage_md//$'\n'/'%0A'}"
-          coverage_md="${coverage_md//$'\r'/'%0D'}"
-          echo $coverage_md
-          echo "::set-output name=coverage_md::$coverage_md"
+          asuna=$(cat asuna.md)
+          asuna="${asuna//'%'/'%25'}"
+          asuna="${asuna//$'\n'/'%0A'}"
+          asuna="${asuna//$'\r'/'%0D'}"
+          echo $asuna
+          echo "::set-output name=asuna::$asuna"
 
     - name: Run coverage report --format and store result
       id: coverage
@@ -101,7 +101,7 @@ runs:
         body: |
           ## 🧪️Coverage Report
 
-          ${{ steps.coverage_md.outputs.coverage_md }}
+          ${{ steps.asuna.outputs.asuna }}
 
           ${{ steps.coverage.outputs.coverage }}
 
