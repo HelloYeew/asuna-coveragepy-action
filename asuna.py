@@ -32,8 +32,8 @@ url = os.getenv('ASUNA_ENDPOINT')
 print(f'⬆️Start uploading report to {url}')
 form_data = {
     'key': os.getenv('ASUNA_UPLOAD_KEY'),
-    'name': 'test',
-    'description': 'a test',
+    'name': name,
+    'description': description,
     # it's float in coverage.json
     'percentage': coverage_json['totals']['percent_covered'],
     'coverage': coverage
