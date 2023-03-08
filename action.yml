@@ -73,8 +73,12 @@ runs:
         echo "ASUNA_MD<<EOF" >> $GITHUB_ENV
         echo $(cat asuna.md) >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
+
+    - name: Run coverage report --format markdown and store in environment file
+      shell: bash
+      run: |
         echo "COVERAGE_MD<<EOF" >> $GITHUB_ENV
-        echo $(cat coverage.md) >> $GITHUB_ENV
+        echo $(coverage report --format markdown) >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
 
     - name: Comment on pull request or update old comment
@@ -90,7 +94,7 @@ runs:
           ${{ env.COVERAGE_MD }}
 
           ---------------------------------------
-          <sub><sup>🗡️ Generate report by [Asuna](https://asuna.helloyeew.dev)</sup></sub>
+          🗡️ Generate report by [Asuna](https://asuna.helloyeew.dev)
         reactions: rocket
 
 branding:
