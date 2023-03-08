@@ -46,6 +46,11 @@ runs:
         coverage report --format markdown > coverage.md
         coverage json
 
+    - name: Download upload script
+      shell: bash
+      run: |
+          curl -L https://raw.githubusercontent.com/HelloYeew/asuna-coveragepy-action/main/asuna.py -o asuna.py
+
     - name: Upload coverage.py results to Asuna
       env:
           ASUNA_UPLOAD_KEY: ${{ inputs.ASUNA_UPLOAD_KEY }}
@@ -60,7 +65,7 @@ runs:
           PUSH_COMMIT: ${{ github.sha }}
       shell: bash
       run: |
-        python .github/asuna.py
+        python asuna.py
 
     - name: Store coverage.md and asuna.md in environment file
       shell: bash
@@ -72,11 +77,16 @@ runs:
         echo $(cat coverage.md) >> $GITHUB_ENV
         echo "EOF" >> $GITHUB_ENV
 
+    - name: Download comment template
+      shell: bash
+      run: |
+          curl -L https://raw.githubusercontent.com/HelloYeew/asuna-coveragepy-action/main/comment-template.md -o comment-template.md
+
     - name: Render comment template
       id: template
       uses: chuhlomin/render-template@v1.4
       with:
-        template: .github/comment-template.md
+        template: comment-template.md
         vars: |
             asuna_report: ${{ env.ASUNA_MD }}
             coverage_report: ${{ env.COVERAGE_MD }}
