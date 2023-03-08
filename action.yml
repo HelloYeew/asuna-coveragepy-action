@@ -93,10 +93,20 @@ runs:
           echo $coverage_report
           echo "::set-output name=coverage::$coverage_report"
 
+    - name: Find Comment ID of old comment if exists on pull request
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: peter-evans/find-comment@v2
+      id: fc
+      with:
+        issue-number: ${{ github.event.number }}
+        comment-author: 'github-actions[bot]'
+        body-includes: '## 🧪️Coverage Report'
+
     - name: Comment on pull request or update old comment
       if: ${{ github.event_name == 'pull_request' }}
       uses: peter-evans/create-or-update-comment@v2
       with:
+        comment-id: ${{ steps.fc.outputs.comment-id }}
         issue-number: ${{ github.event.number }}
         body: |
           ## 🧪️Coverage Report
@@ -107,7 +117,7 @@ runs:
 
           ---------------------------------------
           🗡️ Generate report by [Asuna](https://asuna.helloyeew.dev)
-        reactions: rocket
+        edit-mode: replace
 
 branding:
   icon: 'check-square'
