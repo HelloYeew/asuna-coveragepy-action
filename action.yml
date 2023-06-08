@@ -52,6 +52,7 @@ runs:
           curl -L https://raw.githubusercontent.com/HelloYeew/asuna-coveragepy-action/main/asuna.py -o asuna.py
 
     - name: Upload coverage.py results to Asuna
+      if: always()
       env:
           ASUNA_UPLOAD_KEY: ${{ inputs.ASUNA_UPLOAD_KEY }}
           ASUNA_ENDPOINT: ${{ inputs.ASUNA_ENDPOINT }}
@@ -68,6 +69,7 @@ runs:
         python asuna.py
 
     - name: Store asuna.md as result
+      if: always()
       id: asuna
       env:
           ACTION_ALLOW_UNSECURE_COMMANDS: true
@@ -81,6 +83,7 @@ runs:
           echo "::set-output name=asuna::$asuna"
 
     - name: Run coverage report --format and store result
+      if: always()
       id: coverage
       env:
         ACTION_ALLOW_UNSECURE_COMMANDS: true
